@@ -1,12 +1,16 @@
 from lib2to3.pytree import Base
 from typing import Optional
-from fastapi import Body, FastAPI, Response, status, HTTPException
+from fastapi import Body, FastAPI, Response, status, HTTPException, Depends
 from pydantic import BaseModel
 from random import randrange
 import psycopg2
 from psycopg2.extras import RealDictCursor
 import time
+from . import models
+from .database import engine, get_db
+from sqlalchemy.orm import Session
 
+models.Base.metadata.create_all(bind=engine)
 
 # CRUD aplication - Create Read Update Delete
 
@@ -140,3 +144,8 @@ async def update_post(id: int, post: Post):
             detail = f"post with id: {id} does not exist")
 
     return {"data": updated_post}
+
+
+@app.get("/sqlalchemy/")
+async def get_db(db: Session = Depends(get_db)):
+    return {"status": "success"}
