@@ -33,3 +33,12 @@ class UserResponse(BaseModel):
 
 class UserLogin(UserBase):
     pass
+
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+class TokenData(BaseModel):
+    id: Optional[str] = None
+    
