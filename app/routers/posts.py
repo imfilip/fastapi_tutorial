@@ -1,8 +1,9 @@
+from optparse import Option
 from .. import models, schemas, oauth2
 from fastapi import Body, Response, status, HTTPException, Depends, APIRouter
 from ..database import get_db
 from sqlalchemy.orm import Session
-from typing import List
+from typing import List, Optional
 
 router = APIRouter(
     prefix = "/posts",
@@ -10,10 +11,12 @@ router = APIRouter(
 )
 
 @router.get("/", response_model = List[schemas.PostResponse])
-async def get_posts(db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
+async def get_posts(db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user), limit: int = 10, skip: int = 0, search: Optional[str] = ""):
     # cursor.execute("""SELECT * FROM POSTS""")
     # posts = cursor.fetchall()
-    posts = db.query(models.Posts).all()
+    # posts = db.query(models.Posts).filter(models.Posts.owner_id == current_user.id).all()
+    
+    posts = db.query(models.Posts).filter(models.Posts.title.contains(search)).limit(limit).offset(skip).all()
     return posts
 
 # @app.post("/createposts")
@@ -35,8 +38,14 @@ async def create_posts(post: schemas.PostCreate, db: Session = Depends(get_db),
     
     # conn.commit()
     # print(user_id)
-    print(current_user.email)
-    new_post = models.Posts(**post.dict()) # moja propozycja
+    # print(current_user.email)
+    # print(current_user.id)
+    
+    # Doklejanie owner_id - jest lepszy sposób
+    # post = post.dict()
+    # post["owner_id"] = current_user.id
+
+    new_post = models.Posts(owner_id = current_user.id, **post.dict()) # moja propozycja
     # new_post = models.Posts(title = post.title, content = post.content, published = post.published)
     db.add(new_post)
     db.commit()
@@ -69,6 +78,10 @@ async def get_post(id: int, db: Session = Depends(get_db), current_user: int = D
     if not post:
         raise HTTPException(status_code = status.HTTP_404_NOT_FOUND,
             detail = f"post with id: {id} was not found")
+
+    # if post.owner_id != current_user.id:
+    #     raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
+    #         detail = f"Not authorized to perform requested action")
     
     return post
 
@@ -81,17 +94,23 @@ async def delete_post(id: int, db: Session = Depends(get_db), current_user: int 
     #         detail = f"post with id: {id} does not exist")
     # my_posts.pop(index)
 
-    post = db.query(models.Posts).filter(models.Posts.id == id)
+    post_query = db.query(models.Posts).filter(models.Posts.id == id)
+    post = post_query.first()
 
     # cursor.execute(""" DELETE FROM posts WHERE ID = %s RETURNING * """, (str(id),))
     # deleted_post = cursor.fetchone()
     # conn.commit()
 
-    if post.first() == None:
+    if post == None:
         raise HTTPException(status_code = status.HTTP_404_NOT_FOUND,
             detail = f"post with id: {id} does not exist")
 
-    post.delete(synchronize_session=False)
+    if post.owner_id != current_user.id:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
+            detail = f"Not authorized to perform requested action")
+
+
+    post_query.delete(synchronize_session=False)
     db.commit()
 
     # return {"message": "The post has been deleted"} - jak działanie kończy się statusem 204, to klient nie oczekuję od nas żadnych dodatkowych danych
@@ -119,6 +138,10 @@ async def update_post(id: int, updated_post: schemas.PostCreate, db: Session = D
     if post == None:
         raise HTTPException(status_code = status.HTTP_404_NOT_FOUND,
             detail = f"post with id: {id} does not exist")
+
+    if post.owner_id != current_user.id:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
+            detail = f"Not authorized to perform requested action")
 
     post_query.update(updated_post.dict(), synchronize_session=False)
     db.commit()

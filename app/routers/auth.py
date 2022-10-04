@@ -19,11 +19,11 @@ async def login(user_credentials: OAuth2PasswordRequestForm = Depends(), db: Ses
     user = db.query(models.Users).filter(models.Users.email == user_credentials.username).first()
 
     if not user:
-        raise HTTPException(status_code=status.HTTP_403_NOT_FOUND,
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Invalid credentials.")
 
     if not utils.verify(user_credentials.password, user.password):
-        raise HTTPException(status_code=status.HTTP_403_NOT_FOUND,
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Invalid credentials.")
     
     access_token = oauth2.create_acces_token(data = {"user_id": user.id})
