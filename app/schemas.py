@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, conint
 from typing import Optional
 from datetime import datetime
 
@@ -36,6 +36,9 @@ class PostResponse(PostBase):
     class Config:
         orm_mode = True
 
+class PostResponseVotes(BaseModel):
+    Posts: PostResponse # Musze wielka litera Posts, poniewaz SQLAlchemy model tez jest wielka litera Posts.
+    votes: int
 
 
 class Token(BaseModel):
@@ -45,3 +48,7 @@ class Token(BaseModel):
 class TokenData(BaseModel):
     id: Optional[str] = None
     
+
+class Vote(BaseModel):
+    post_id: int
+    dir: conint(le=1) # tutaj chce zeby bylo albo zero albo 1, ale to conint zapewnia mi, ze sa to integer less equal 1.
