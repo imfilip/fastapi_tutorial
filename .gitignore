@@ -1,5 +1,7 @@
 # Moje wykluczenia
 .env
+__pycache__
+venv/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
