@@ -36,4 +36,4 @@ app.include_router(votes.router)
 
 @app.get("/", tags = ["index"])
 async def root():
-    return {"message": "Hello World"}
+    return {"message": "Hello World!"}
