@@ -7,3 +7,10 @@ W pliku Procfile określamy w jaki sposób uruchomić aplikację.
 # --port=${PORT=-5000} - z tym dolarem oznacza to tyle, że jeżeli heroku nie dostarczy numeru portu, to domyślnie ma być 5000
 
 #PostgreSQL on Heroku
+Puszczam w konsoli kod:
+heroku addons:create heroku-postgresql:hobby-dev
+# Uwaga, od grudnia 2022 postgresql na heroku nie będzie dostepne w darmowej wersji
+# W taki sposób tworzę bazę danych postgresql na serwerze. Następnie musze uruchomic alembic z poziomu basha Heroku:
+# 1) heroku run bash, a później alembic upgrade head
+lub
+# 2) heroku run "alembic upgrade head"

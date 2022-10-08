@@ -36,4 +36,5 @@ app.include_router(votes.router)
 
 @app.get("/", tags = ["index"])
 async def root():
-    return {"message": "Hello World!"}
+    return {"message": "Hello World!",
+        "task": "Change your URL adding sufix /docs. Try the app out creating firstly a new user and next after the authentication (green button with padlock and 'Authorize' word) creating posts. Have fun dude! :)"}
