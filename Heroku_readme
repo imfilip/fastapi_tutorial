@@ -1,6 +1,9 @@
+#Procfile
 web: uvicorn app.main:app --host=0.0.0.0 -- port=${PORT=-5000}
 
 W pliku Procfile określamy w jaki sposób uruchomić aplikację.
 # uvicorn app.main:app - zrozumiałe
 # --host=0.0.0.0 - okreśalmy jakie IP mają mieć dostęp do apki. Te wartości oznaczają, że wszyscy mogą wejść
-# --port=${PORT=-5000} - z tym dolarem oznacza to tyle, że jeżeli heroku nie dostarczy numeru portu, to domyślnie ma być 5000
+# --port=${PORT=-5000} - z tym dolarem oznacza to tyle, że jeżeli heroku nie dostarczy numeru portu, to domyślnie ma być 5000 - USUNĄŁEM TEN FRAGMENT, BO HEROKU LOGS WYRZUCAŁ MI NA TYM BŁĄD
+
+#PostgreSQL on Heroku
