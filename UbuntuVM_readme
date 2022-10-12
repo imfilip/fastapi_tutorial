@@ -1,0 +1,74 @@
+To connect to VM you can use ssh protocol with the use of your terminal.
+ssh [computername]@[VM ip]
+ssh imfilip@20.111.18.87
+
+Enter the password you provided creating your VM.
+
+First thing you should do after your VM is created is to update information of available apps (e.g. if there are latest version of apps you have installed) for Ubuntu and then upgrade all apps installed on your VM.
+sudo apt update && sudo apt upgrade -y
+
+-y - ensures all prompts will be passed with acceptance
+
+Check if python is installed:
+python --version
+python3 --version
+
+If not, install it:
+sudo apt install python3
+
+Check if pip is installed:
+pip --version
+pip3 --version
+
+If not, install it:
+sudo apt install python3-pip
+
+Install virtualenv python package:
+sudo pip3 install virtualenv
+
+Install postgresql:
+sudo apt install postgresql postgresql-contrib -y
+
+
+You can check if postgresql server is running on your machine:
+ps -ef | grep postgres
+
+or
+
+sudo systemctl status postgresql
+
+ps - list all active processes
+
+Or:
+pg_lsclusters 
+This command show information about all PostgreSQL clusters
+
+List of all packages installed on tour VM contain postgres in name:
+dpkg -l | grep postgres
+
+If something is wrong you can uninstall all packages related to postresql:
+sudo apt-get --purge remove postgresql postgresql-*
+
+Delete all folders:
+sudo rm -rf /var/lib/postgresql/
+sudo rm -rf /var/log/postgresql/
+sudo rm -rf /etc/postgresql/
+
+Delete postgres user:
+sudo deluser postgres
+
+List of all users of your VM:
+sudo cat /etc/passwd
+
+You can try to switch to postgres user:
+su - postgres
+
+In my case prompt occurs to provide password to this user (on the tutorial there was that requirements).
+Thi is due to the fact that Azure VM does not provide you with the access to root user. In order to change user to postgres using su, you have to know root password.
+There is another way. This one worked:
+sudo -u postgres psql postgres
+
+
+Now you can change the password for postgres user:
+\password postgres
+
