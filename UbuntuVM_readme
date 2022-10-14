@@ -1,3 +1,7 @@
+### ALERT ###
+# I couldn't connect to remote database server on VM from my loacl machine. I found the solution - azure cloud blocked input/output ports in some way. I changed the settings in 'Network' allowing wide range of ports 1000-65535.
+
+
 To connect to VM you can use ssh protocol with the use of your terminal.
 ssh [computername]@[VM ip]
 ssh imfilip@20.111.18.87
@@ -157,3 +161,31 @@ export MY_PASS=pass
 Then write and quit the file. To activate the script type:
 source .env
 That should create environemntal variables. Check printenv.
+
+To do it more like a dev you should create .env file without those export prefixes. Instead this file should look like .env file on your local machine:
+DATABASE_HOSTNAME=localhost
+DATABASE_PORT=5432
+
+To do that create remote .env file by copying data from local using vi editor. Then execute file by command:
+set -o allexport; source /home/imfilip/.env; set +o allexport
+
+But when you reboot your machine all lately set variables disapear. Try by reboot and reconect to VM.
+
+To solve the issue we have to add set command to file that is executed every time machine is turning on.
+You can find that file in your home directory - it is hidden, so type:
+ls -la
+
+Open file .profile and at the end of the file paste script 
+set -o allexport; source /home/imfilip/.env; set +o allexport
+
+Now create the database in your postgresql server. To do that get into psql:
+psql -U postgres
+and create database:
+create database fastapi;
+
+Make sure that your all environment variables match with all your settings.
+
+It time to create dtabase structure. To do that we will use alembic revisions. Go into app directory, activate venv, go into src folder and run:
+alembic upgrade head
+
+
