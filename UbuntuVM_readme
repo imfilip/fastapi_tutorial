@@ -1,3 +1,7 @@
+### ALERT ###
+# I couldn't connect to remote database server on VM from my loacl machine. I found the solution - azure cloud blocked input/output ports in some way. I changed the settings in 'Network' allowing wide range of ports 1000-65535.
+
+
 To connect to VM you can use ssh protocol with the use of your terminal.
 ssh [computername]@[VM ip]
 ssh imfilip@20.111.18.87
@@ -71,4 +75,117 @@ sudo -u postgres psql postgres
 
 Now you can change the password for postgres user:
 \password postgres
+
+
+Change the config files of postgresql:
+pg_hba.conf
+postgresql.conf
+
+with vi application:
+
+sudo vi postgresql.conf
+Change the file adding ip addresses you want to connect remotly from. I have added '*', what means all addresses.
+
+sudo vi pg_hba.conf
+Change the user from peer to md5, which mean that in order to login to postgresql you do not have to switch user to unix/postgres.
+
+After the files are changed restart the postgresql instance:
+sudo systemctl restart postgresql
+Or
+sudo service postgresql restart
+
+It is recommended to not let using root user on production server. Thus new user should be created:
+sudo adduser [username]
+
+You have to add sudo privilige to new user:
+sudo usermod -aG sudo nowy
+
+You can switch users by:
+su - [username]
+
+
+Ok. You machine is ready. Let's deploy your application. Firstly create folder in your home directory (or wherever you want):
+mkdir app
+
+Create python virtualenv:
+virtualenv venv
+
+Check if it is created properly
+ls -la
+
+And now you can activate that environment
+source /venv/bin/activate
+
+By deactivate you can get out of virtual env.
+
+Create folder src
+mkdir src
+And copy all data from git to this src using git clone command. Since August 2021 password auth from console is not available. You have to create special token on GitHub and provide it instead of password.
+
+Now you can install all packages from requirements.txt file. Firstly activate venv and then install:
+pip install -r requirements.txt
+
+I had some issues (the tutor as well). There was lack of some library - libpq-fe.h (some dependency of psycopg2)
+
+Install that library manually (it is not python lib), but firstly remember to deactivate venv:
+sudo apt install libpq-dev
+
+Another one library missed:
+sudo apt install python3-testresources
+
+I had another one issue which does not let me use pip app. Even checking the pip version returns error. I uninstalled pip and installed it again.
+
+Ok,  everything seems to be prepared to run app. Let's do it:
+uvicorn app.main:app
+
+8 validation errors occured - missing environmental variables.
+
+Ok, so let's create those missing environmental variables. On linux you can do it by e.g.
+export MY_NAME=imfilip
+And then you can check all envvariables by:
+printenv
+
+Remove this variable by
+unset MY_NAME
+
+It is extremely inconvinient to create all env variables manually. There is easier way. Back to home directory and create file .env:
+touch .env
+
+The file by defult is hidden. You can list those files by:
+ls -la
+
+Edit the file and for example add following:
+export MY_NAME=imfilip
+export MY_PASS=pass
+
+Then write and quit the file. To activate the script type:
+source .env
+That should create environemntal variables. Check printenv.
+
+To do it more like a dev you should create .env file without those export prefixes. Instead this file should look like .env file on your local machine:
+DATABASE_HOSTNAME=localhost
+DATABASE_PORT=5432
+
+To do that create remote .env file by copying data from local using vi editor. Then execute file by command:
+set -o allexport; source /home/imfilip/.env; set +o allexport
+
+But when you reboot your machine all lately set variables disapear. Try by reboot and reconect to VM.
+
+To solve the issue we have to add set command to file that is executed every time machine is turning on.
+You can find that file in your home directory - it is hidden, so type:
+ls -la
+
+Open file .profile and at the end of the file paste script 
+set -o allexport; source /home/imfilip/.env; set +o allexport
+
+Now create the database in your postgresql server. To do that get into psql:
+psql -U postgres
+and create database:
+create database fastapi;
+
+Make sure that your all environment variables match with all your settings.
+
+It time to create dtabase structure. To do that we will use alembic revisions. Go into app directory, activate venv, go into src folder and run:
+alembic upgrade head
+
 

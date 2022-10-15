@@ -5,7 +5,7 @@ from sqlalchemy import pool
 
 from alembic import context
 from app.models import Base ##### Zaimportowałem Base
-from app.config import settings
+from app.config import settings ##### Zaimportowałem zmienne środowiskowe
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
