@@ -212,3 +212,31 @@ Ok, now we would like to make this application is running in the background. We 
 
 In the folder /etc/systemd/system/ ls you can find all services installed on the machine.
 Some settings files need to be created.
+Create file with the name of you service (my was fastapi) and copy commands from file gunicorn.service.
+
+EnvironmentFile=/home/imfilip/.env 
+Above is necessary because services can not use environment variables. Thus you have to specify file with variables you want to use as environment.
+
+Every time you change sth in your service settings file you have to restart the service:
+sudo systemctl daemon-reload
+sudo systemctl restart fastapi.service
+
+Now you have to ensure that your service will be running after reboot. The info if your service reboots automatically after reboot is available in line 'Loaded:' in service status response.
+After the path to service there should be 'enabled'.
+It is easy, just run:
+sudo systemctl enable fastapi.service
+
+
+In professional deployment very often the proxy server is used. In our case we will use NGINX. Any request will be sent to NGINX and then NGINX will request main app. It is optimized for 'SSL Termination'.
+sudo apt install nginx -y
+
+sudo systemctl start nginx
+
+When the nginx is running the vm machine ip through web browser will direct to default page of nginx. Before it works for me I had to open all ports in Azure settings.
+
+Check directory /etc/nginx/sites-available - thera are some deafult settings of nginx server (file deafult - server block).
+Change this file with settings from file nginx.
+The main part is 'proxy_pass http://localhost:8000;'. The remainders are just for optimalization. 
+This mean that nginx will be a proxy server for http protocel for localhost at port 8000 - the direction to our app.
+
+Restart nginx service. Now uder the ip address your app shoul appear. 
