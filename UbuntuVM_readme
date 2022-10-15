@@ -185,7 +185,30 @@ create database fastapi;
 
 Make sure that your all environment variables match with all your settings.
 
-It time to create dtabase structure. To do that we will use alembic revisions. Go into app directory, activate venv, go into src folder and run:
+It time to create database structure. To do that we will use alembic revisions. Go into app directory, activate venv, go into src folder and run:
 alembic upgrade head
 
+You can now connect to the database from your local pgAdmin app. I had an issue with the connection - pgAdmin couldn't connect to remote server. I checked the firewalls on linux VM (there are some apps) and all ports were open. The problem was with Azure firewalls - I opened wide range of ports.
 
+Now you can go to src directory (with activated venv) and run application using uvicorn:
+uvicorn app.main:app
+
+When you open your browser on ip address with specified port (8000) nothing appears. It is due to limited allowed clients, who can connect - only localhost. To solve this, you have to allow to connect all addresses:
+uvicorn --host 0.0.0.0 app.main:app
+
+We will use process manager gunicorn:
+pip install gunicorn
+
+Using gunicorn you can set number of workers (processes under the hood - in command below there are 4 workers set):
+gunicorn -w 4 -k uvicorn.workers.UvicornWorker app.main:app --bind 0.0.0.0:8000
+
+More paramaters you can check with:
+gunicorn --help
+
+After execution of above commnad console is frozen. To check running processes run another one connection and check:
+sudo ps -ef | grep uni
+
+Ok, now we would like to make this application is running in the background. We will create own service!
+
+In the folder /etc/systemd/system/ ls you can find all services installed on the machine.
+Some settings files need to be created.
