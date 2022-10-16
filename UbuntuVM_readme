@@ -239,4 +239,23 @@ Change this file with settings from file nginx.
 The main part is 'proxy_pass http://localhost:8000;'. The remainders are just for optimalization. 
 This mean that nginx will be a proxy server for http protocel for localhost at port 8000 - the direction to our app.
 
-Restart nginx service. Now uder the ip address your app shoul appear. 
+Restart nginx service. Now uder the ip address your app should appear.
+
+How to add custom DNS name to our IP?
+Check the website:
+https://www.c-sharpcorner.com/article/adding-domain-name-to-azure-vm-using-dns-zone/
+
+To put it in a nutshell:
+Set up the DNS Zone at Azure. Next the DNS servers' names copy to your domain provider. Next click on Record Set and add new record set:
+First record:
+Name: @
+Type: A
+IP Address: IP address of your VM
+
+If everything will be saved (even few hours) you should have access to your VM by your custom domain: www.[domain].pl.
+Create second record with www isntead of @ and CNAME istead of A. Then domain [domain].pl should work as well.
+
+It should last some time, but you can check if your DNS name is correctly assign by:
+sudo nslookup -type=a [domain].pl
+
+
