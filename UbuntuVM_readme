@@ -258,4 +258,24 @@ Create second record with www isntead of @ and CNAME istead of A. Then domain [d
 It should last some time, but you can check if your DNS name is correctly assign by:
 sudo nslookup -type=a [domain].pl
 
+It would be great to have secure https connection. To do that got to https://certbot.eff.org/instructions?ws=nginx&os=ubuntufocal and follow the instructions.
+The certbot application made some changes in default nginx configuration files, adding blocks with SSL part making requests to and responses from your api secured/encrypted (S in HTTPS stands for secured).
+
+A good practice is to set firewall. Let's use ufw app. Check ufw status:
+sudo systectl status ufw
+sudo ufw status
+
+Allow following kind of traffic:
+sudo ufw allow http
+sudo ufw allow https
+sudo ufw allow ssh
+
+And now start the firewall:
+sudo ufw enable
+
+You can easily delete the rule by:
+sudo ufw delete allow ...
+
+I've checked on pgAdmin and port 5432. When the firewall blocks 5432 the connection with postgresql server is impossible to establish.
+
 
