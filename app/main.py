@@ -8,7 +8,7 @@ from .config import settings
 
 
 # Jak już korzystam z alembic, to ten fragment nie jest potrzebny. On odpowiada za stworzenie modeli na bazie, jeżeli ich wcześniej nie było.
-# models.Base.metadata.create_all(bind=engine)
+models.Base.metadata.create_all(bind=engine)
 
 # CRUD aplication - Create Read Update Delete
 
@@ -36,6 +36,6 @@ app.include_router(votes.router)
 
 @app.get("/", tags = ["index"])
 async def root():
-    return {"message": "Hello World!",
+    return {"message": "chyba nie?",
         "task": "Change your URL adding sufix /docs. Try the app out creating firstly a new user and next after the authentication (green button with padlock and 'Authorize' word) creating posts. Have fun dude! :)",
         "remark": "Why haven't you changed anything?"}

@@ -278,4 +278,6 @@ sudo ufw delete allow ...
 
 I've checked on pgAdmin and port 5432. When the firewall blocks 5432 the connection with postgresql server is impossible to establish.
 
+When you would like to make some changes in the app send the code through git remote, install requirements and restart the application service:
+sudo systemctl restart fastapi.service
 
