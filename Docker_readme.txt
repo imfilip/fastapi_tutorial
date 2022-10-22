@@ -37,4 +37,21 @@ I had an issue. After creation of both services I couldn't interact with databas
 The best way would be to initialize alembic commands on container cmd, but at this moment I have not tried to do that.
 
 There is a way to get into container console:
-docker exec -it fastapi_tutorial-api-1 bash 
+docker exec -it fastapi_tutorial-api-1 bash
+
+You can push your local images to remote repo on docker. Firstly you have to log in:
+docker login
+Then you have to rename your image to be fitted to docker requirements. Take a look at your repo site - there is simple manual.
+You can rename the image with command:
+docker image tag fastapi_tutorial-api imfilip/fastapi
+
+Intro to docker PROD environment
+There are two slightly different files with docker compose settings.
+
+You can run the containers by:
+docker-compose -f docker-compose-DEV.yml up -d
+
+The production container doesn't work on my local environment, because I have not create environment variables.
+
+
+

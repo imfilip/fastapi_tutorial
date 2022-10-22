@@ -1,0 +1,42 @@
+version: "3"
+services:
+  api:
+    build: . # PROD: usually we use here ready image stored in a docker repo and then we point out to the repo, e.g.: image: imfilip/fastapi
+    depends_on:
+      - postgres # it ensures that postgres containser is ready before main fastapi container
+    ports: # one way is to create a list: [port on localhost:port on container]
+      - 80:8000 # RRPD - CHANGED #- 8000:8000 # different way is to point ports in that way # first value specify for which ports from the traffic is open
+      # second value specify which ports in the container has to be used to receive the traffic
+    
+    # PROD - DELETED ## volumes:
+    # PROD - DELETED ##   - ./:/usr/src/app # it is called BIND MOUNT # read only # you have to specify path in local dir and path in container # it is to make sure that all code changes in my development directory will be synchronized with the code in the container created from image prepared bofore code change
+    
+    # I can solve the issue with enforcing rebuild of image everytime the change in code is made
+# My container run properly even without the following environment variable code
+    # PROD - DELETED # command: bash -c "uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload" # uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload 
+    # somtething doesn't work in my ocntainer. The code is updated synchronically, but uvicorn do not reload every time I change code
+    # command to ooverride the cmd provided in Dockerfile. It will fix the issue with auto sync. Ofc the same effect we would acchieve by adding --reload in Dockerfile CMD section.
+    environment:
+      - DATABASE_HOSTNAME=${DATABASE_HOSTNAME} #PROD - CHANGED# postgres # as a name of postgres service # docker create local network with inner DNS
+      - DATABASE_PORT=${DATABASE_PORT} #PROD - CHANGED# 5432
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD} #PROD - CHANGED# admin
+      - DATABASE_NAME=${DATABASE_NAME} #PROD - CHANGED# fastapi
+      - DATABASE_USERNAME=${DATABASE_USERNAME} #PROD - CHANGED# postgres
+      - SECRET_KEY=${SECRET_KEY} #PROD - CHANGED# jakisdlugiStringDoHashowainia
+      - ALGORITHM=${ALGORITHM} #PROD - CHANGED# HS256
+      - ACCESS_TOKEN_EXPIRE_MINUTES=${ACCESS_TOKEN_EXPIRE_MINUTES} #PROD - CHANGED# 30
+    # env_file:
+    #   - ./.env # another option to provide environment variable
+  postgres:
+    image: postgres # here we specify prebuild image with postgres, we do not have to prepare own container like it was for python and fastapi app
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD} #PROD - CHANGED# admin # it is required by the image
+      - POSTGRES_DB=${DATABASE_NAME} #PROD - CHANGED# fastapi # it is required by the image
+    volumes: # in case of databases we would like to store data created in the container even after the container is killed/not running/deleted
+      - postgres-db:/var/lib/postgresql/data # here we specify what directory from container we would like to save on our local machine
+
+volumes: # we have to specify all volues used in all containers to make all the containers have the access to them
+  postgres-db:
+
