@@ -281,3 +281,15 @@ I've checked on pgAdmin and port 5432. When the firewall blocks 5432 the connect
 When you would like to make some changes in the app send the code through git remote, install requirements and restart the application service:
 sudo systemctl restart fastapi.service
 
+
+
+USEFULL COMMANDS:
+
+- List all services:
+systemctl list-units --type=service
+systemctl list-unit-files --type=service
+
+
+ps -o pid,user,%mem,command ax | sort -b -k3 -r
+
+sudo pmap [PID] | tail -n 1 | awk '/[0-9]K/{print $2}'
