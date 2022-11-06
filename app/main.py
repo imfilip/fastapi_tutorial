@@ -1,5 +1,5 @@
 
-from fastapi import Body, FastAPI
+from fastapi import Body, FastAPI, status
 from fastapi.middleware.cors import CORSMiddleware
 from . import models
 from .database import engine
@@ -34,7 +34,7 @@ app.include_router(users.router)
 app.include_router(auth.router)
 app.include_router(votes.router)
 
-@app.get("/", tags = ["index"])
+@app.get("/", tags = ["index"])# for the purpose of testing:  , status_code=status.HTTP_201_CREATED)
 async def root():
     return {"message": "chyba nie?",
         "task": "Change your URL adding sufix /docs. Try the app out creating firstly a new user and next after the authentication (green button with padlock and 'Authorize' word) creating posts. Have fun dude! :)",
