@@ -77,3 +77,4 @@ def test_posts(test_user, session, test_user2):
     posts_return = session.query(models.Posts).all()
 
     return posts_return
+
