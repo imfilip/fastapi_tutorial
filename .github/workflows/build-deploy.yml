@@ -22,8 +22,9 @@ on: [push, pull_request] # push # [push, pull_request] # [push]
 
 jobs: 
   job1:
-    # environment: # it is not available in private repo on github 
-    #   name: testing # in github/settings/environment you can create environments and then use them here.
+    environment: # it is not available in private repo on github 
+      name: testing # in github/settings/environment you can create environments and then use them here.
+    
     env:
       DATABASE_HOSTNAME: ${{secrets.DATABASE_HOSTNAME}} #localhost # ${{secrets.FATABASE_HOSTNAME}} - in real projects you do not want to push all sensitive data to repository. To solve that problem in github.com you can go to settings/secrets and provide sensitive data in global env variables. And then you can easily refer to them by ${{secrets.VARIABLE_NAME}} 
       # Similar thing you can make in settings/environments.
@@ -39,10 +40,10 @@ jobs:
       postgres:
         image: postgres:latest
         env:
-          POSTGRES_PASSWORD: ${{secrets.DATABASE_PASSWORD}}
+          POSTGRES_PASSWORD: admin #${{secrets.DATABASE_PASSWORD}}
           POSTGRES_DB: ${{secrets.DATABASE_NAME}}_test
-          # POSTGRES_PORT: ${{secrets.DATABASE_PORT}} # it is not neccessary
-          # POSTGRES_USER: ${{secrets.DATABASE_USERNAME}} # it is not neccessary
+          POSTGRES_PORT: ${{secrets.DATABASE_PORT}} # it is not neccessary
+          POSTGRES_USER: ${{secrets.DATABASE_USERNAME}} # it is not neccessary
         ports:
           - 5432:5432
         options: >- # it is copied from docs. I should ensure that python tests are run after postgres instance is initialized.
