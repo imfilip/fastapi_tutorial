@@ -16,3 +16,5 @@ jobs:
         uses: actions/checkout@v2
       - name: say hi to imfilip
         run: echo "hello imfilip!"
+      - name: installing python
+        run: sudo apt install python3
