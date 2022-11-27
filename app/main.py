@@ -8,7 +8,7 @@ from .config import settings
 
 
 # Jak już korzystam z alembic, to ten fragment nie jest potrzebny. On odpowiada za stworzenie modeli na bazie, jeżeli ich wcześniej nie było.
-models.Base.metadata.create_all(bind=engine)
+# models.Base.metadata.create_all(bind=engine) # Z jakiegoś powodu jednak zostawiłem ten kod. Ale musze go wyłączyć, bo jak puszczam testy na github, to mi wywala, bo chce, żebym miał produkcyjną bazę danych fastapi.
 
 # CRUD aplication - Create Read Update Delete
 
