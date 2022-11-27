@@ -22,15 +22,18 @@ on: [push, pull_request] # push # [push, pull_request] # [push]
 
 jobs: 
   job1:
+    environment: # it is not available in private repo on github 
+      name: testing # in github/settings/environment you can create environments and then use them here.
     env:
-      DATABASE_HOSTNAME: localhost
-      DATABASE_PORT: 5432
-      DATABASE_PASSWORD: admin
-      DATABASE_NAME: fastapi
-      DATABASE_USERNAME: postgres
-      SECRET_KEY: jakisdlugiStringDoHashowainia
-      ALGORITHM: HS256
-      ACCESS_TOKEN_EXPIRE_MINUTES: 30
+      DATABASE_HOSTNAME: ${{secrets.DATABASE_HOSTNAME}} #localhost # ${{secrets.FATABASE_HOSTNAME}} - in real projects you do not want to push all sensitive data to repository. To solve that problem in github.com you can go to settings/secrets and provide sensitive data in global env variables. And then you can easily refer to them by ${{secrets.VARIABLE_NAME}} 
+      # Similar thing you can make in settings/environments.
+      DATABASE_PORT: ${{secrets.DATABASE_PORT}} #5432
+      DATABASE_PASSWORD: ${{secrets.DATABASE_PASSWORD}} #admin
+      DATABASE_NAME: ${{secrets.DATABASE_NAME}} #fastapi
+      DATABASE_USERNAME: ${{secrets.DATABASE_USERNAME}} # postgres
+      SECRET_KEY: ${{secrets.SECRET_KEY}} # jakisdlugiStringDoHashowainia
+      ALGORITHM: ${{secrets.ALGORITHM}} # HS256
+      ACCESS_TOKEN_EXPIRE_MINUTES: ${{secrets.ACCESS_TOKEN_EXPIRE_MINUTES}} # 30
     runs-on: ubuntu-latest
     steps:
       - name: pulling git repo
