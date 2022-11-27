@@ -36,24 +36,13 @@ jobs:
       ACCESS_TOKEN_EXPIRE_MINUTES: 30 # ${{secrets.ACCESS_TOKEN_EXPIRE_MINUTES}} # 30
     
     services:
-      postgres1:
-        image: postgres
+      postgres:
+        image: postgres:latest
         env:
           POSTGRES_PASSWORD: admin # ${{secrets.DATABASE_PASSWORD}}
-          POSTGRES_DB: fastapi_test # ${{secrets.DATABASE_NAME}}_test
-        ports:
-          - 5432:5432
-        options: >- # it is copied from docs. I should ensure that python tests are run after postgres instance is initialized.
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-      
-      postgres2:
-        image: postgres
-        env:
-          POSTGRES_PASSWORD: admin # ${{secrets.DATABASE_PASSWORD}}
-          POSTGRES_DB: fastapi # ${{secrets.DATABASE_NAME}}_test
+          POSTGRES_DB: [fastapi, fastapi_test] # ${{secrets.DATABASE_NAME}}_test
+          POSTGRES_PORT: 5432
+          POSTGRES_USER: postgres
         ports:
           - 5432:5432
         options: >- # it is copied from docs. I should ensure that python tests are run after postgres instance is initialized.
