@@ -26,6 +26,8 @@ orjson==3.8.0
 packaging==21.3
 passlib==1.7.4
 pluggy==1.0.0
+preload==2.2
+preloaded==1.20221012.123320
 psycopg2==2.9.3
 pyasn1==0.4.8
 pycparser==2.21
