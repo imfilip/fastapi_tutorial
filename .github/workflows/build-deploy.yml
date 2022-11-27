@@ -29,7 +29,7 @@ jobs:
       # Similar thing you can make in settings/environments.
       DATABASE_PORT: 5432 # ${{secrets.DATABASE_PORT}} #5432
       DATABASE_PASSWORD: admin # ${{secrets.DATABASE_PASSWORD}} #admin
-      DATABASE_NAME: fastapi # ${{secrets.DATABASE_NAME}} #fastapi
+      DATABASE_NAME: fastapi_test # ${{secrets.DATABASE_NAME}} #fastapi
       DATABASE_USERNAME: postgres # ${{secrets.DATABASE_USERNAME}} # postgres
       SECRET_KEY: jakisdlugiStringDoHashowainia # ${{secrets.SECRET_KEY}} # jakisdlugiStringDoHashowainia
       ALGORITHM: HS256 # ${{secrets.ALGORITHM}} # HS256
