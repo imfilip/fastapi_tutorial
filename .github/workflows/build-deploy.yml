@@ -3,16 +3,16 @@ name: Build and Deploy Code
 on: [push, pull_request] # push # [push, pull_request] # [push]
   # push:
   #   branches: ["main"] #["main", "another_branch"]
-      # - "main"
-      # - "another_branch"
+  #     - "main"
+  #     - "another_branch"
   # pull_request:
   #   branches:
   #     - "test_branch"
-  jobs: 
-    job1: 
-      runs-on: ubuntu-latest
-      steps:
-        - name: pulling git repo
-          uses: actions/checkout@v2
-        - name: say hi to imfilip
-          run: echo "hello imfilip!"
+jobs: 
+  job1: 
+    runs-on: ubuntu-latest
+    steps:
+      - name: pulling git repo
+        uses: actions/checkout@v2
+      - name: say hi to imfilip
+        run: echo "hello imfilip!"
