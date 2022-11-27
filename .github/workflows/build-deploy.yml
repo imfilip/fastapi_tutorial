@@ -40,7 +40,7 @@ jobs:
         image: postgres
         env:
           POSTGRES_PASSWORD: admin # ${{secrets.DATABASE_PASSWORD}}
-          POSTGRES_DB: fastapi_test # ${{secrets.DATABASE_NAME}}_test
+          POSTGRES_DB: fastapi_test_test # ${{secrets.DATABASE_NAME}}_test
         ports:
           - 5432:5432
         options: >- # it is copied from docs. I should ensure that python tests are run after postgres instance is initialized.
