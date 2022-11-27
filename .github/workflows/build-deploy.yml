@@ -25,24 +25,24 @@ jobs:
     # environment: # it is not available in private repo on github 
     #   name: testing # in github/settings/environment you can create environments and then use them here.
     env:
-      DATABASE_HOSTNAME: localhost #${{secrets.DATABASE_HOSTNAME}} #localhost # ${{secrets.FATABASE_HOSTNAME}} - in real projects you do not want to push all sensitive data to repository. To solve that problem in github.com you can go to settings/secrets and provide sensitive data in global env variables. And then you can easily refer to them by ${{secrets.VARIABLE_NAME}} 
+      DATABASE_HOSTNAME: ${{secrets.DATABASE_HOSTNAME}} #localhost # ${{secrets.FATABASE_HOSTNAME}} - in real projects you do not want to push all sensitive data to repository. To solve that problem in github.com you can go to settings/secrets and provide sensitive data in global env variables. And then you can easily refer to them by ${{secrets.VARIABLE_NAME}} 
       # Similar thing you can make in settings/environments.
-      DATABASE_PORT: 5432 # ${{secrets.DATABASE_PORT}} #5432
-      DATABASE_PASSWORD: admin # ${{secrets.DATABASE_PASSWORD}} #admin
-      DATABASE_NAME: fastapi # ${{secrets.DATABASE_NAME}} #fastapi
-      DATABASE_USERNAME: postgres # ${{secrets.DATABASE_USERNAME}} # postgres
-      SECRET_KEY: jakisdlugiStringDoHashowainia # ${{secrets.SECRET_KEY}} # jakisdlugiStringDoHashowainia
-      ALGORITHM: HS256 # ${{secrets.ALGORITHM}} # HS256
-      ACCESS_TOKEN_EXPIRE_MINUTES: 30 # ${{secrets.ACCESS_TOKEN_EXPIRE_MINUTES}} # 30
+      DATABASE_PORT: ${{secrets.DATABASE_PORT}} #5432
+      DATABASE_PASSWORD: ${{secrets.DATABASE_PASSWORD}} #admin
+      DATABASE_NAME: ${{secrets.DATABASE_NAME}} #fastapi
+      DATABASE_USERNAME: ${{secrets.DATABASE_USERNAME}} # postgres
+      SECRET_KEY: ${{secrets.SECRET_KEY}} # jakisdlugiStringDoHashowainia
+      ALGORITHM: ${{secrets.ALGORITHM}} # HS256
+      ACCESS_TOKEN_EXPIRE_MINUTES: ${{secrets.ACCESS_TOKEN_EXPIRE_MINUTES}} # 30
     
     services:
       postgres:
         image: postgres:latest
         env:
-          POSTGRES_PASSWORD: admin # ${{secrets.DATABASE_PASSWORD}}
-          POSTGRES_DB: fastapi_test # ${{secrets.DATABASE_NAME}}_test
-          POSTGRES_PORT: 5432
-          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: ${{secrets.DATABASE_PASSWORD}}
+          POSTGRES_DB: ${{secrets.DATABASE_NAME}}_test
+          POSTGRES_PORT: ${{secrets.DATABASE_PORT}} # it is not neccessary
+          POSTGRES_USER: ${{secrets.DATABASE_USERNAME}} # it is not neccessary
         ports:
           - 5432:5432
         options: >- # it is copied from docs. I should ensure that python tests are run after postgres instance is initialized.
@@ -71,5 +71,3 @@ jobs:
         run: | 
           pip install pytest
           pytest
-
-# Sth is not working
